@@ -22,28 +22,28 @@ export default function EditorScreen() {
 
   if (!currentFile) {
     return (
-      <Box className="flex-1 items-center justify-center bg-background-0">
-        <Text className="text-typography-500">파일을 선택해주세요.</Text>
+      <Box className="flex-1 items-center justify-center bg-background-950">
+        <Text className="text-typography-400">파일을 선택해주세요.</Text>
         <Pressable onPress={() => router.back()} className="mt-4 p-3">
-          <Text className="text-primary-500">파일 목록으로 돌아가기</Text>
+          <Text className="text-primary-400">파일 목록으로 돌아가기</Text>
         </Pressable>
       </Box>
     );
   }
 
   return (
-    <Box className="flex-1 bg-background-0">
+    <Box className="flex-1 bg-background-950">
       {/* Header */}
-      <Box className="border-b border-outline-200 bg-background-50 px-3 py-3">
+      <Box className="border-b border-outline-700 bg-background-900 px-3 py-3">
         <HStack space="sm" className="items-center">
           <Pressable onPress={handleGoBack} className="p-2">
-            <Ionicons name="arrow-back" size={24} color="#6366f1" />
+            <Ionicons name="arrow-back" size={24} color="#a5b4fc" />
           </Pressable>
           <VStack className="flex-1">
-            <Text size="md" className="font-bold text-typography-900" numberOfLines={1}>
+            <Text size="md" className="font-bold text-typography-50" numberOfLines={1}>
               {currentFile.name}
             </Text>
-            <Text size="xs" className="text-typography-500" numberOfLines={1}>
+            <Text size="xs" className="text-typography-400" numberOfLines={1}>
               {currentFile.path}
             </Text>
           </VStack>
@@ -52,10 +52,10 @@ export default function EditorScreen() {
 
       {/* Markdown Content */}
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: '#0f0f0f' }}
         contentContainerStyle={{ padding: 16 }}
       >
-        <Markdown style={markdownStyles}>
+        <Markdown style={darkMarkdownStyles}>
           {currentFile.content}
         </Markdown>
       </ScrollView>
@@ -63,61 +63,79 @@ export default function EditorScreen() {
   );
 }
 
-const markdownStyles = StyleSheet.create({
+const darkMarkdownStyles = StyleSheet.create({
   body: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
+    lineHeight: 26,
+    color: '#e4e4e7',
   },
   heading1: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    color: '#1a1a1a',
+    marginTop: 24,
+    marginBottom: 12,
+    color: '#fafafa',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingBottom: 8,
+    borderBottomColor: '#3f3f46',
+    paddingBottom: 10,
   },
   heading2: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 18,
-    marginBottom: 8,
-    color: '#1a1a1a',
+    marginTop: 20,
+    marginBottom: 10,
+    color: '#fafafa',
   },
   heading3: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 6,
-    color: '#1a1a1a',
+    marginTop: 18,
+    marginBottom: 8,
+    color: '#fafafa',
   },
   heading4: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 6,
+    color: '#e4e4e7',
+  },
+  heading5: {
+    fontSize: 16,
+    fontWeight: 'bold',
     marginTop: 14,
     marginBottom: 4,
-    color: '#1a1a1a',
+    color: '#e4e4e7',
+  },
+  heading6: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 12,
+    marginBottom: 4,
+    color: '#a1a1aa',
   },
   paragraph: {
     marginTop: 0,
-    marginBottom: 12,
+    marginBottom: 14,
+    color: '#e4e4e7',
   },
   link: {
-    color: '#6366f1',
-    textDecorationLine: 'underline',
+    color: '#818cf8',
+    textDecorationLine: 'none',
   },
   blockquote: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#18181b',
     borderLeftWidth: 4,
     borderLeftColor: '#6366f1',
     paddingLeft: 16,
-    paddingVertical: 8,
-    marginVertical: 12,
+    paddingRight: 12,
+    paddingVertical: 10,
+    marginVertical: 14,
+    borderRadius: 4,
   },
   code_inline: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#27272a',
+    color: '#f472b6',
     fontFamily: 'monospace',
     fontSize: 14,
     paddingHorizontal: 6,
@@ -125,70 +143,94 @@ const markdownStyles = StyleSheet.create({
     borderRadius: 4,
   },
   code_block: {
-    backgroundColor: '#1e1e1e',
-    color: '#d4d4d4',
+    backgroundColor: '#18181b',
+    color: '#a5f3fc',
     fontFamily: 'monospace',
     fontSize: 14,
-    padding: 12,
+    padding: 14,
     borderRadius: 8,
-    marginVertical: 12,
-    overflow: 'hidden',
+    marginVertical: 14,
+    borderWidth: 1,
+    borderColor: '#27272a',
   },
   fence: {
-    backgroundColor: '#1e1e1e',
-    color: '#d4d4d4',
+    backgroundColor: '#18181b',
+    color: '#a5f3fc',
     fontFamily: 'monospace',
     fontSize: 14,
-    padding: 12,
+    padding: 14,
     borderRadius: 8,
-    marginVertical: 12,
+    marginVertical: 14,
+    borderWidth: 1,
+    borderColor: '#27272a',
   },
   list_item: {
     marginVertical: 4,
+    color: '#e4e4e7',
   },
   bullet_list: {
-    marginVertical: 8,
+    marginVertical: 10,
   },
   ordered_list: {
-    marginVertical: 8,
+    marginVertical: 10,
+  },
+  bullet_list_icon: {
+    color: '#6366f1',
+  },
+  ordered_list_icon: {
+    color: '#6366f1',
   },
   hr: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#3f3f46',
     height: 1,
-    marginVertical: 16,
+    marginVertical: 20,
   },
   table: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    marginVertical: 12,
+    borderColor: '#3f3f46',
+    marginVertical: 14,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   thead: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#27272a',
   },
   th: {
-    padding: 8,
+    padding: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#3f3f46',
     fontWeight: 'bold',
+    color: '#fafafa',
+  },
+  tr: {
+    backgroundColor: '#18181b',
   },
   td: {
-    padding: 8,
+    padding: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#3f3f46',
+    color: '#e4e4e7',
   },
   strong: {
     fontWeight: 'bold',
+    color: '#fafafa',
   },
   em: {
     fontStyle: 'italic',
+    color: '#d4d4d8',
   },
   s: {
     textDecorationLine: 'line-through',
+    color: '#71717a',
   },
   image: {
     width: '100%',
     height: 200,
     resizeMode: 'contain',
-    marginVertical: 12,
+    marginVertical: 14,
+    borderRadius: 8,
+  },
+  text: {
+    color: '#e4e4e7',
   },
 });
