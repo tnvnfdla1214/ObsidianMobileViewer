@@ -1,6 +1,6 @@
 import useStore from '@/src/context/store';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     FlatList,
     Pressable,
@@ -17,16 +17,16 @@ export default function RepositoriesScreen() {
   const obsidianRepo = repositories.find(repo => repo.name === 'Obsidian');
   console.log('🔍 찾은 Obsidian repo:', obsidianRepo);
 
-//   useEffect(() => {
-//     // 로드 후 자동으로 Obsidian 선택
-//     if (obsidianRepo) {
-//       console.log('✅ Obsidian repo 찾음! 파일 목록으로 이동...');
-//       setCurrentRepo(obsidianRepo);
-//       router.replace('/(main)/files');
-//     } else {
-//       console.log('❌ Obsidian repo를 찾을 수 없음');
-//     }
-//   }, [obsidianRepo]);
+  useEffect(() => {
+    // 로드 후 자동으로 Obsidian 선택
+    if (obsidianRepo) {
+      console.log('✅ Obsidian repo 찾음! 파일 목록으로 이동...');
+      setCurrentRepo(obsidianRepo);
+      router.replace('/(main)/files');
+    } else {
+      console.log('❌ Obsidian repo를 찾을 수 없음');
+    }
+  }, [obsidianRepo]);
 
   const handleSelectRepository = (repo: any) => {
     setCurrentRepo(repo);
