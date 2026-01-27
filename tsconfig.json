@@ -3,9 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@/src/*": ["./src/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/context/*": ["./src/context/*"],
+      "@/screens/*": ["./src/screens/*"],
+      "@/components/*": ["./src/components/*"]
     }
   },
   "include": [

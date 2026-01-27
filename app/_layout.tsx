@@ -1,24 +1,38 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import useStore from '@/src/context/store';
+import { Stack, useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import { useEffect } from 'react';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { token, setToken } = useStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const savedToken = await SecureStore.getItemAsync('github_token');
+        if (savedToken) {
+          setToken(savedToken);
+          setTimeout(() => {
+            router.replace('/(main)');
+          }, 100);
+        } else {
+          setTimeout(() => {
+            router.replace('/(auth)/login');
+          }, 100);
+        }
+      } catch (error) {
+        console.error('Failed to load token:', error);
+        //router.replace('/(auth)/login');
+      }
+    };
+    loadToken();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(main)" />
+    </Stack>
   );
 }
