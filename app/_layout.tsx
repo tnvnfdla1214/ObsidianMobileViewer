@@ -3,6 +3,9 @@ import { Stack, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect } from 'react';
 
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import '@/global.css';
+
 export default function RootLayout() {
   const { token, setToken } = useStore();
   const router = useRouter();
@@ -30,9 +33,13 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    
+    <GluestackUIProvider mode="dark">
+      <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(main)" />
     </Stack>
+    </GluestackUIProvider>
+  
   );
 }

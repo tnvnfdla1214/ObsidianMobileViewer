@@ -2,14 +2,14 @@ import useStore from '@/src/context/store';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import Markdown from 'react-native-markdown-display';
+
+import { Box } from '@/components/ui/box';
+import { HStack } from '@/components/ui/hstack';
+import { Pressable } from '@/components/ui/pressable';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
 
 export default function EditorScreen() {
   const router = useRouter();
@@ -22,94 +22,46 @@ export default function EditorScreen() {
 
   if (!currentFile) {
     return (
-      <View style={styles.centerContainer}>
-        <Text>파일을 선택해주세요.</Text>
-        <Pressable onPress={() => router.back()} style={styles.backLink}>
-          <Text style={styles.backLinkText}>파일 목록으로 돌아가기</Text>
+      <Box className="flex-1 items-center justify-center bg-background-0">
+        <Text className="text-typography-500">파일을 선택해주세요.</Text>
+        <Pressable onPress={() => router.back()} className="mt-4 p-3">
+          <Text className="text-primary-500">파일 목록으로 돌아가기</Text>
         </Pressable>
-      </View>
+      </Box>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {/* 헤더 */}
-      <View style={styles.header}>
-        <Pressable onPress={handleGoBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#0066cc" />
-        </Pressable>
-        <View style={styles.headerInfo}>
-          <Text style={styles.fileName} numberOfLines={1}>
-            {currentFile.name}
-          </Text>
-          <Text style={styles.filePath} numberOfLines={1}>
-            {currentFile.path}
-          </Text>
-        </View>
-      </View>
+    <Box className="flex-1 bg-background-0">
+      {/* Header */}
+      <Box className="border-b border-outline-200 bg-background-50 px-3 py-3">
+        <HStack space="sm" className="items-center">
+          <Pressable onPress={handleGoBack} className="p-2">
+            <Ionicons name="arrow-back" size={24} color="#6366f1" />
+          </Pressable>
+          <VStack className="flex-1">
+            <Text size="md" className="font-bold text-typography-900" numberOfLines={1}>
+              {currentFile.name}
+            </Text>
+            <Text size="xs" className="text-typography-500" numberOfLines={1}>
+              {currentFile.path}
+            </Text>
+          </VStack>
+        </HStack>
+      </Box>
 
-      {/* 마크다운 내용 */}
+      {/* Markdown Content */}
       <ScrollView
-        style={styles.content}
-        contentContainerStyle={styles.contentContainer}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 16 }}
       >
         <Markdown style={markdownStyles}>
           {currentFile.content}
         </Markdown>
       </ScrollView>
-    </View>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backLink: {
-    marginTop: 16,
-    padding: 12,
-  },
-  backLinkText: {
-    color: '#0066cc',
-    fontSize: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  backButton: {
-    padding: 8,
-    marginRight: 8,
-  },
-  headerInfo: {
-    flex: 1,
-  },
-  fileName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  filePath: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 2,
-  },
-  content: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-  },
-});
 
 const markdownStyles = StyleSheet.create({
   body: {
@@ -153,7 +105,7 @@ const markdownStyles = StyleSheet.create({
     marginBottom: 12,
   },
   link: {
-    color: '#0066cc',
+    color: '#6366f1',
     textDecorationLine: 'underline',
   },
   blockquote: {

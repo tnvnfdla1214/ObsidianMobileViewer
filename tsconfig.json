@@ -3,18 +3,34 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"],
-      "@/src/*": ["./src/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/context/*": ["./src/context/*"],
-      "@/screens/*": ["./src/screens/*"],
-      "@/components/*": ["./src/components/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@/src/*": [
+        "./src/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/context/*": [
+        "./src/context/*"
+      ],
+      "@/screens/*": [
+        "./src/screens/*"
+      ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
   ]
 }

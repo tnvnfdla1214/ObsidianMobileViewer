@@ -3,14 +3,14 @@ import { getFileContent, getRepositoryContents, GitHubContent } from '@/src/util
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-    ActivityIndicator,
-    FlatList,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+import { FlatList } from 'react-native';
+
+import { Box } from '@/components/ui/box';
+import { HStack } from '@/components/ui/hstack';
+import { Pressable } from '@/components/ui/pressable';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
 
 export default function FilesScreen() {
   const router = useRouter();
@@ -28,7 +28,6 @@ export default function FilesScreen() {
   const [contents, setContents] = useState<GitHubContent[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // 파일 목록 로드
   useEffect(() => {
     loadContents();
   }, [currentPath, currentRepo]);
@@ -55,16 +54,13 @@ export default function FilesScreen() {
     }
   };
 
-  // 폴더 클릭 -> 해당 폴더로 이동
   const handleFolderPress = (folder: GitHubContent) => {
     setCurrentPath(folder.path);
   };
 
-  // 파일 클릭 -> 파일 내용 보기
   const handleFilePress = async (file: GitHubContent) => {
     if (!token || !currentRepo || !user) return;
 
-    // 마크다운 파일만 지원
     if (!file.name.endsWith('.md')) {
       setError('마크다운(.md) 파일만 볼 수 있습니다.');
       return;
@@ -92,44 +88,10 @@ export default function FilesScreen() {
     }
   };
 
-  // 뒤로 가기 (상위 폴더로)
   const handleGoBack = () => {
     if (currentPath === '') return;
     const parentPath = currentPath.split('/').slice(0, -1).join('/');
     setCurrentPath(parentPath);
-  };
-
-  const renderItem = ({ item }: { item: GitHubContent }) => {
-    const isFolder = item.type === 'dir';
-    const isMarkdown = item.name.endsWith('.md');
-
-    return (
-      <Pressable
-        onPress={() => isFolder ? handleFolderPress(item) : handleFilePress(item)}
-        style={[styles.item, !isFolder && !isMarkdown && styles.itemDisabled]}
-        disabled={!isFolder && !isMarkdown}
-      >
-        <Ionicons
-          name={isFolder ? 'folder' : isMarkdown ? 'document-text' : 'document'}
-          size={24}
-          color={isFolder ? '#f0c000' : isMarkdown ? '#6366f1' : '#999'}
-          style={styles.icon}
-        />
-        <View style={styles.itemInfo}>
-          <Text style={[styles.itemName, !isFolder && !isMarkdown && styles.textDisabled]}>
-            {item.name}
-          </Text>
-          {!isFolder && (
-            <Text style={styles.itemSize}>
-              {formatSize(item.size)}
-            </Text>
-          )}
-        </View>
-        {(isFolder || isMarkdown) && (
-          <Ionicons name="chevron-forward" size={20} color="#999" />
-        )}
-      </Pressable>
-    );
   };
 
   const formatSize = (bytes: number) => {
@@ -138,145 +100,104 @@ export default function FilesScreen() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  const renderItem = ({ item }: { item: GitHubContent }) => {
+    const isFolder = item.type === 'dir';
+    const isMarkdown = item.name.endsWith('.md');
+    const isDisabled = !isFolder && !isMarkdown;
+
+    return (
+      <Pressable
+        onPress={() => isFolder ? handleFolderPress(item) : handleFilePress(item)}
+        disabled={isDisabled}
+        className={`mb-2 rounded-xl p-4 ${isDisabled ? 'opacity-50' : 'active:bg-background-100'} bg-background-50`}
+      >
+        <HStack space="md" className="items-center">
+          <Box className="w-8 items-center">
+            <Ionicons
+              name={isFolder ? 'folder' : isMarkdown ? 'document-text' : 'document'}
+              size={24}
+              color={isFolder ? '#f0c000' : isMarkdown ? '#6366f1' : '#666'}
+            />
+          </Box>
+          <VStack className="flex-1">
+            <Text
+              size="sm"
+              className={`font-medium ${isDisabled ? 'text-typography-400' : 'text-typography-900'}`}
+            >
+              {item.name}
+            </Text>
+            {!isFolder && (
+              <Text size="xs" className="text-typography-500">
+                {formatSize(item.size)}
+              </Text>
+            )}
+          </VStack>
+          {(isFolder || isMarkdown) && (
+            <Ionicons name="chevron-forward" size={20} color="#999" />
+          )}
+        </HStack>
+      </Pressable>
+    );
+  };
+
   if (!currentRepo) {
     return (
-      <View style={styles.centerContainer}>
-        <Text>레포지토리를 선택해주세요.</Text>
-      </View>
+      <Box className="flex-1 items-center justify-center bg-background-0">
+        <Text className="text-typography-500">레포지토리를 선택해주세요.</Text>
+      </Box>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {/* 헤더: 현재 경로 */}
-      <View style={styles.header}>
-        <Text style={styles.repoName}>{currentRepo.name}</Text>
-        <Text style={styles.pathText}>/{currentPath || ''}</Text>
-      </View>
+    <Box className="flex-1 bg-background-0">
+      {/* Header */}
+      <Box className="border-b border-outline-200 bg-background-50 px-4 py-4">
+        <Text size="lg" className="font-bold text-typography-900">
+          {currentRepo.name}
+        </Text>
+        <Text size="xs" className="font-mono text-typography-500">
+          /{currentPath || ''}
+        </Text>
+      </Box>
 
-      {/* 뒤로 가기 버튼 */}
+      {/* Back Button */}
       {currentPath !== '' && (
-        <Pressable onPress={handleGoBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={20} color="#0066cc" />
-          <Text style={styles.backText}>상위 폴더</Text>
+        <Pressable
+          onPress={handleGoBack}
+          className="border-b border-outline-100 px-4 py-3 active:bg-background-50"
+        >
+          <HStack space="sm" className="items-center">
+            <Ionicons name="arrow-back" size={20} color="#6366f1" />
+            <Text size="sm" className="text-primary-500">상위 폴더</Text>
+          </HStack>
         </Pressable>
       )}
 
-      {/* 에러 메시지 */}
+      {/* Error */}
       {error && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
+        <Box className="mx-4 mt-3 rounded-lg bg-error-50 p-3">
+          <Text size="sm" className="text-center text-error-600">{error}</Text>
+        </Box>
       )}
 
-      {/* 로딩 */}
+      {/* Content */}
       {isLoading ? (
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#0066cc" />
-          <Text style={styles.loadingText}>로딩 중...</Text>
-        </View>
+        <Box className="flex-1 items-center justify-center">
+          <Spinner size="large" />
+          <Text size="sm" className="mt-3 text-typography-500">로딩 중...</Text>
+        </Box>
       ) : contents.length === 0 ? (
-        <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>빈 폴더입니다.</Text>
-        </View>
+        <Box className="flex-1 items-center justify-center">
+          <Text className="text-typography-400">빈 폴더입니다.</Text>
+        </Box>
       ) : (
         <FlatList
           data={contents}
           keyExtractor={(item) => item.path}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={{ padding: 16 }}
         />
       )}
-    </View>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#f5f5f5',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  repoName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  pathText: {
-    fontSize: 13,
-    color: '#666',
-    fontFamily: 'monospace',
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  backText: {
-    marginLeft: 8,
-    color: '#0066cc',
-    fontSize: 14,
-  },
-  errorContainer: {
-    backgroundColor: '#fee2e2',
-    padding: 12,
-    margin: 10,
-    borderRadius: 8,
-  },
-  errorText: {
-    color: '#dc2626',
-    textAlign: 'center',
-  },
-  loadingText: {
-    marginTop: 10,
-    color: '#666',
-  },
-  emptyText: {
-    color: '#999',
-    fontSize: 16,
-  },
-  listContent: {
-    padding: 10,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  itemDisabled: {
-    opacity: 0.5,
-  },
-  icon: {
-    marginRight: 12,
-  },
-  itemInfo: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  textDisabled: {
-    color: '#999',
-  },
-  itemSize: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 2,
-  },
-});
