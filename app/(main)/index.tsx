@@ -12,7 +12,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 
-export default function FilesScreen() {
+export default function Screen() {
   const router = useRouter();
   const {
     token,
@@ -150,29 +150,6 @@ export default function FilesScreen() {
 
   return (
     <Box className="flex-1 bg-background-0">
-      {/* Header */}
-      <Box className="border-b border-outline-200 bg-background-50 px-4 py-4">
-        <Text size="lg" className="font-bold text-typography-900">
-          {currentRepo.name}
-        </Text>
-        <Text size="xs" className="font-mono text-typography-500">
-          /{currentPath || ''}
-        </Text>
-      </Box>
-
-      {/* Back Button */}
-      {currentPath !== '' && (
-        <Pressable
-          onPress={handleGoBack}
-          className="border-b border-outline-100 px-4 py-3 active:bg-background-50"
-        >
-          <HStack space="sm" className="items-center">
-            <Ionicons name="arrow-back" size={20} color="#6366f1" />
-            <Text size="sm" className="text-primary-500">상위 폴더</Text>
-          </HStack>
-        </Pressable>
-      )}
-
       {/* Error */}
       {error && (
         <Box className="mx-4 mt-3 rounded-lg bg-error-50 p-3">

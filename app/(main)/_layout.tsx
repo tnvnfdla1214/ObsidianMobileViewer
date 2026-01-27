@@ -1,11 +1,12 @@
 import useStore from '@/src/context/store';
+import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 export default function MainLayout() {
   const router = useRouter();
-  const { logout } = useStore();
+  const { user, logout } = useStore(); 
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('github_token');
@@ -13,26 +14,30 @@ export default function MainLayout() {
     router.replace('/(auth)/login');
   };
 
- return (
+  return (
     <Stack
       screenOptions={{
-        headerBackTitle: '',
+        headerStyle: {
+          backgroundColor: '#0f172a',
+        },
+        headerTintColor: '#f1f5f9',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 18,
+        },
+        headerShadowVisible: false,
         headerRight: () => (
-          <Pressable 
-            onPress={handleLogout} 
-            style={{ marginRight: 15, padding: 4 }}
-          >
-            <Text style={{ color: '#0066cc', fontSize: 14 }}>로그아웃</Text>
+          <Pressable onPress={handleLogout} className="mr-4">
+            <Ionicons name="log-out-outline" size={22} color="#c084fc" />
           </Pressable>
         ),
       }}
     >
-      {/* index 삭제 → files가 기본 화면 */}
       <Stack.Screen
         name="index"
         options={{
-          title: 'Obsidian Vault',
-          headerBackVisible: false,  // 뒤로가기 숨김
+          title: user ? `${user.login}'s Obsidian` : 'Obsidian',
+          headerBackVisible: false,
         }}
       />
       <Stack.Screen
