@@ -31,6 +31,7 @@ export const getUserRepositories = async (token: string) => {
     const octokit = new Octokit({ auth: token });
     const { data } = await octokit.repos.listForAuthenticatedUser({
       per_page: 100,
+      affiliation: 'owner',  // 내가 소유한 레포지토리만
     });
     return data;
   } catch (error) {

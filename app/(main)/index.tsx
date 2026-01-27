@@ -13,6 +13,21 @@ export default function RepositoriesScreen() {
   const router = useRouter();
   const { repositories, user, setCurrentRepo } = useStore();
 
+  // "Obsidian" repository만 필터링
+  const obsidianRepo = repositories.find(repo => repo.name === 'Obsidian');
+  console.log('🔍 찾은 Obsidian repo:', obsidianRepo);
+
+//   useEffect(() => {
+//     // 로드 후 자동으로 Obsidian 선택
+//     if (obsidianRepo) {
+//       console.log('✅ Obsidian repo 찾음! 파일 목록으로 이동...');
+//       setCurrentRepo(obsidianRepo);
+//       router.replace('/(main)/files');
+//     } else {
+//       console.log('❌ Obsidian repo를 찾을 수 없음');
+//     }
+//   }, [obsidianRepo]);
+
   const handleSelectRepository = (repo: any) => {
     setCurrentRepo(repo);
     router.push('/(main)/files');
@@ -37,13 +52,13 @@ export default function RepositoriesScreen() {
         <Text style={styles.userName}>안녕하세요, {user?.login}!</Text>
       </View>
 
-      {repositories.length === 0 ? (
+      {!obsidianRepo ? (
         <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>Repository가 없습니다.</Text>
+          <Text style={styles.emptyText}>Obsidian Repository가 없습니다.</Text>
         </View>
       ) : (
         <FlatList
-          data={repositories}
+          data={[obsidianRepo]}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderRepository}
           contentContainerStyle={styles.listContent}
