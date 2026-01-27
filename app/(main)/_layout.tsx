@@ -13,33 +13,32 @@ export default function MainLayout() {
     router.replace('/(auth)/login');
   };
 
-  return (
+ return (
     <Stack
       screenOptions={{
-        headerBackTitle: 'Back',
+        headerBackTitle: '',
         headerRight: () => (
-          <Pressable onPress={handleLogout} style={{ marginRight: 15 }}>
+          <Pressable 
+            onPress={handleLogout} 
+            style={{ marginRight: 15, padding: 4 }}
+          >
             <Text style={{ color: '#0066cc', fontSize: 14 }}>로그아웃</Text>
           </Pressable>
         ),
       }}
     >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: 'Repository 목록',
-        }}
-      />
+      {/* index 삭제 → files가 기본 화면 */}
       <Stack.Screen
         name="files"
         options={{
-          title: '파일 목록',
+          title: 'Obsidian Vault',
+          headerBackVisible: false,  // 뒤로가기 숨김
         }}
       />
       <Stack.Screen
         name="editor"
         options={{
-          title: '파일 편집',
+          title: '파일 보기',
         }}
       />
     </Stack>

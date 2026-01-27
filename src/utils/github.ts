@@ -1,7 +1,4 @@
 import { Octokit } from '@octokit/rest';
-import * as SecureStore from 'expo-secure-store';
-
-const GITHUB_CLIENT_ID = process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || '';
 
 // Base64 디코딩 (React Native 환경용)
 const decodeBase64 = (base64: string): string => {
@@ -14,14 +11,6 @@ const decodeBase64 = (base64: string): string => {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return new TextDecoder('utf-8').decode(bytes);
-};
-
-export const getOctokitInstance = async () => {
-  const token = await SecureStore.getItemAsync('github_token');
-  if (!token) {
-    throw new Error('No token found');
-  }
-  return new Octokit({ auth: token });
 };
 
 export const getUserInfo = async (token: string) => {
@@ -51,6 +40,16 @@ export const getUserRepositories = async (token: string) => {
     console.error('Failed to get repositories:', error);
     throw error;
   }
+};
+
+export const findObsidianRepo = async (token: string) => {
+  const octokit = new Octokit({ auth: token });
+  const { data } = await octokit.repos.listForAuthenticatedUser({
+    per_page: 100, affiliation: 'owner'
+  });
+  const repo = data.find(r => r.name === 'Obsidian');
+  if (!repo) throw new Error('Obsidian repo 없음');
+  return repo;
 };
 
 export interface GitHubContent {

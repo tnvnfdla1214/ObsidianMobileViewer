@@ -23,7 +23,6 @@ export interface FileInfo {
 interface StoreState {
   user: User | null;
   token: string | null;
-  repositories: Repository[];
   currentRepo: Repository | null;
   currentPath: string;
   currentFile: FileInfo | null;
@@ -31,7 +30,6 @@ interface StoreState {
 
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
-  setRepositories: (repos: Repository[]) => void;
   setCurrentRepo: (repo: Repository | null) => void;
   setCurrentPath: (path: string) => void;
   setCurrentFile: (file: FileInfo | null) => void;
@@ -42,7 +40,6 @@ interface StoreState {
 const useStore = create<StoreState>((set) => ({
   user: null,
   token: null,
-  repositories: [],
   currentRepo: null,
   currentPath: '',
   currentFile: null,
@@ -50,7 +47,6 @@ const useStore = create<StoreState>((set) => ({
 
   setUser: (user) => set({ user }),
   setToken: (token) => set({ token }),
-  setRepositories: (repos) => set({ repositories: repos }),
   setCurrentRepo: (repo) => set({ currentRepo: repo }),
   setCurrentPath: (path) => set({ currentPath: path }),
   setCurrentFile: (file) => set({ currentFile: file }),
@@ -59,10 +55,10 @@ const useStore = create<StoreState>((set) => ({
   logout: () => set({
     user: null,
     token: null,
-    repositories: [],
     currentRepo: null,
     currentPath: '',
     currentFile: null,
+    isLoading: false,
   }),
 }));
 
