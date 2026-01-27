@@ -39,10 +39,10 @@ export default function LoginScreen() {
       await SecureStore.setItemAsync('github_token', token);
       setStoreToken(token);
       setUser(user);
-      setCurrentRepo(obsidianRepo);  // 👈 바로 현재 repo 설정
+      setCurrentRepo(obsidianRepo);
 
       Alert.alert('성공', 'Obsidian Vault가 준비되었습니다!');
-      router.replace('/(main)/files');  // 👈 바로 files로
+      router.replace('/(main)');
     } catch (error: any) {
       const errorMessage = error.message || '토큰이 올바르지 않습니다.';
       Alert.alert('로그인 실패', errorMessage);

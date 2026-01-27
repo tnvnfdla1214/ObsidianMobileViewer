@@ -29,7 +29,7 @@ export default function MainLayout() {
     >
       {/* index 삭제 → files가 기본 화면 */}
       <Stack.Screen
-        name="files"
+        name="index"
         options={{
           title: 'Obsidian Vault',
           headerBackVisible: false,  // 뒤로가기 숨김

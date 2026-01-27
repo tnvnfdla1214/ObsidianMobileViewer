@@ -49,7 +49,7 @@ export default function SplashScreen() {
       setUser(user);
       setCurrentRepo(obsidianRepo);
 
-      router.replace('/(main)/files');
+      router.replace('/(main)');
 
     } catch (error) {
       // 토큰이 만료되었거나 유효하지 않으면 삭제
