@@ -1,5 +1,6 @@
 import useDialogStore from '@/src/context/dialogStore';
 import useStore from '@/src/context/store';
+import { formatSize } from '@/src/utils/format';
 import { getFileContent, getRepositoryContents, GitHubContent } from '@/src/utils/github';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -95,27 +96,12 @@ export default function RepositoryScreen() {
       console.error('Failed to load file:', err);
       showDialog({
         title: '파일 로드 오류',
-        message: '파일을 불러오는데 실패했습니다. 다시 로그인해주세요.',
-        confirmText: '로그인하기',
-        onConfirm: () => {
-          router.replace('/(auth)/login');
-        },
+        message: '파일을 불러오는데 실패했습니다.\n파일 상태나 인터넷 상태를 확인하시고 재시도 해주세요.',
+        confirmText: '확인하기',
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGoBack = () => {
-    if (currentPath === '') return;
-    const parentPath = currentPath.split('/').slice(0, -1).join('/');
-    setCurrentPath(parentPath);
-  };
-
-  const formatSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   const renderItem = ({ item }: { item: GitHubContent }) => {
@@ -168,7 +154,6 @@ export default function RepositoryScreen() {
 
   return (
     <Box className="flex-1 bg-background-0">
-      {/* Content */}
       {contents.length === 0 ? (
         <Box className="flex-1 items-center justify-center">
           <Text className="text-typography-400">빈 Repository 입니다.</Text>
