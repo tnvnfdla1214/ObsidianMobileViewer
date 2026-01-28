@@ -62,10 +62,10 @@ export default function LoginScreen() {
           {/* Header */}
           <VStack space="xs" className="items-center mb-4">
             <Heading size="2xl" className="text-typography-900 font-bold">
-              Obsidian Viewer
+              Git Note
             </Heading>
             <Text size="sm" className="text-typography-500 text-center">
-              GitHub 토큰으로 Vault 연결
+              GitHub 토큰으로 연결
             </Text>
           </VStack>
 
