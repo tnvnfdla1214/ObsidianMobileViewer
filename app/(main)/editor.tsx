@@ -1,15 +1,12 @@
 import useStore from '@/src/context/store';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
 import { Box } from '@/components/ui/box';
-import { HStack } from '@/components/ui/hstack';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
-import { VStack } from '@/components/ui/vstack';
 
 export default function EditorScreen() {
   const router = useRouter();
@@ -33,23 +30,6 @@ export default function EditorScreen() {
 
   return (
     <Box className="flex-1 bg-background-950">
-      {/* Header */}
-      <Box className="border-b border-outline-700 bg-background-900 px-3 py-3">
-        <HStack space="sm" className="items-center">
-          <Pressable onPress={handleGoBack} className="p-2">
-            <Ionicons name="arrow-back" size={24} color="#a5b4fc" />
-          </Pressable>
-          <VStack className="flex-1">
-            <Text size="md" className="font-bold text-typography-50" numberOfLines={1}>
-              {currentFile.name}
-            </Text>
-            <Text size="xs" className="text-typography-400" numberOfLines={1}>
-              {currentFile.path}
-            </Text>
-          </VStack>
-        </HStack>
-      </Box>
-
       {/* Markdown Content */}
       <ScrollView
         style={{ flex: 1, backgroundColor: '#0f0f0f' }}

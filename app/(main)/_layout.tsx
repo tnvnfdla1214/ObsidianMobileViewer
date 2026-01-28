@@ -1,13 +1,12 @@
 import useStore from '@/src/context/store';
-import { Ionicons } from '@expo/vector-icons';
 import { Stack, usePathname, useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { Pressable } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 export default function MainLayout() {
   const router = useRouter();
   const pathname = usePathname(); 
-  const { user, logout } = useStore(); 
+  const { user, currentFile, logout } = useStore(); 
 
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('github_token');
@@ -36,9 +35,9 @@ export default function MainLayout() {
         options={{
           title: user ? `${user.login}'s Obsidian` : 'Obsidian',
           headerBackVisible: false,
-          headerRight: () => (  // 👈 index에서만 버튼
-            <Pressable onPress={handleLogout} className="mr-4 p-2">
-              <Ionicons name="log-out-outline" size={22} color="#c084fc" />
+          headerRight: () => (
+            <Pressable onPress={handleLogout} style={{ marginRight: 8, padding: 8 }}>
+              <Text style={{ color: '#c084fc', fontSize: 14, fontWeight: '500' }}>logout</Text>
             </Pressable>
           ),
         }}
@@ -46,7 +45,18 @@ export default function MainLayout() {
       <Stack.Screen
         name="editor"
         options={{
-          title: '파일 보기',
+          headerTitle: () => (
+            <View>
+              <Text style={{ color: '#f1f5f9', fontWeight: 'bold', fontSize: 16 }}>
+                {currentFile?.name || 'Obsidian.md'}
+              </Text>
+              {currentFile?.path && (
+                <Text style={{ color: '#94a3b8', fontSize: 11 }} numberOfLines={1}>
+                  {currentFile.path}
+                </Text>
+              )}
+            </View>
+          ),
           headerRight: undefined,
         }}
       />
