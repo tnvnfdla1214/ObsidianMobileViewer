@@ -10,21 +10,20 @@ import { Spinner } from '@/components/ui/spinner';
 
 export default function EditorScreen() {
   const router = useRouter();
-  const { currentFile: _currentFile } = useStore();
-  const currentFile = null; // 테스트용
+  const { currentFile } = useStore();
+
+  // const { currentFile: _currentFile } = useStore();
+  // const currentFile = null; // 테스트용
+
   const { showDialog } = useDialogStore();
 
   useEffect(() => {
     if (!currentFile) {
       showDialog({
         title: '파일을 찾을 수 없습니다',
-        message: '선택된 파일이 없습니다. 로그인 화면으로 이동합니다.',
-        confirmText: '로그인하기',
-        cancelText: '취소',
+        message: '선택된 파일이 없습니다. 이전 화면으로 이동합니다.',
+        confirmText: '뒤로가기',
         onConfirm: () => {
-          router.replace('/(auth)/login');
-        },
-        onCancel: () => {
           router.back();
         },
       });

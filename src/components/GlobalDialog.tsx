@@ -51,24 +51,30 @@ export default function GlobalDialog() {
               </Text>
             )}
 
-            <HStack space="sm" className="mt-2 justify-end">
-              <Button
-                variant="outline"
-                action="secondary"
-                onPress={handleCancel}
-                className="flex-1"
-              >
-                <ButtonText>{cancelText}</ButtonText>
-              </Button>
-              <Button
-                variant="solid"
-                action="primary"
-                onPress={handleConfirm}
-                className="flex-1"
-              >
-                <ButtonText>{confirmText}</ButtonText>
-              </Button>
-            </HStack>
+            {(cancelText || confirmText) && (
+              <HStack space="sm" className="mt-2 justify-end">
+                {cancelText && (
+                  <Button
+                    variant="outline"
+                    action="secondary"
+                    onPress={handleCancel}
+                    className="flex-1"
+                  >
+                    <ButtonText>{cancelText}</ButtonText>
+                  </Button>
+                )}
+                {confirmText && (
+                  <Button
+                    variant="solid"
+                    action="primary"
+                    onPress={handleConfirm}
+                    className="flex-1"
+                  >
+                    <ButtonText>{confirmText}</ButtonText>
+                  </Button>
+                )}
+              </HStack>
+            )}
           </VStack>
         </Box>
       </View>
