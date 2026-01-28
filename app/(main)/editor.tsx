@@ -1,36 +1,46 @@
+import useDialogStore from '@/src/context/dialogStore';
 import useStore from '@/src/context/store';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
 import { Box } from '@/components/ui/box';
-import { Pressable } from '@/components/ui/pressable';
-import { Text } from '@/components/ui/text';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function EditorScreen() {
   const router = useRouter();
-  const { currentFile, setCurrentFile } = useStore();
+  const { currentFile: _currentFile } = useStore();
+  const currentFile = null; // 테스트용
+  const { showDialog } = useDialogStore();
 
-  const handleGoBack = () => {
-    setCurrentFile(null);
-    router.back();
-  };
+  useEffect(() => {
+    if (!currentFile) {
+      showDialog({
+        title: '파일을 찾을 수 없습니다',
+        message: '선택된 파일이 없습니다. 로그인 화면으로 이동합니다.',
+        confirmText: '로그인하기',
+        cancelText: '취소',
+        onConfirm: () => {
+          router.replace('/(auth)/login');
+        },
+        onCancel: () => {
+          router.back();
+        },
+      });
+    }
+  }, [currentFile]);
 
   if (!currentFile) {
     return (
       <Box className="flex-1 items-center justify-center bg-background-950">
-        <Text className="text-typography-400">파일을 선택해주세요.</Text>
-        <Pressable onPress={() => router.back()} className="mt-4 p-3">
-          <Text className="text-primary-400">파일 목록으로 돌아가기</Text>
-        </Pressable>
+        <Spinner size="large" />
       </Box>
     );
   }
 
   return (
     <Box className="flex-1 bg-background-950">
-      {/* Markdown Content */}
       <ScrollView
         style={{ flex: 1, backgroundColor: '#0f0f0f' }}
         contentContainerStyle={{ padding: 16 }}
