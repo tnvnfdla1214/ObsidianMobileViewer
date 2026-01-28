@@ -1,3 +1,4 @@
+import useDialogStore from '@/src/context/dialogStore';
 import useStore from '@/src/context/store';
 import { getFileContent, getRepositoryContents, GitHubContent } from '@/src/utils/github';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,7 +13,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 
-export default function Screen() {
+export default function RepositoryScreen() {
   const router = useRouter();
   const {
     token,
@@ -24,9 +25,9 @@ export default function Screen() {
     isLoading,
     setIsLoading
   } = useStore();
+  const { showDialog } = useDialogStore();
 
   const [contents, setContents] = useState<GitHubContent[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadContents();
@@ -36,7 +37,6 @@ export default function Screen() {
     if (!token || !currentRepo || !user) return;
 
     setIsLoading(true);
-    setError(null);
 
     try {
       const data = await getRepositoryContents(
@@ -48,7 +48,14 @@ export default function Screen() {
       setContents(data);
     } catch (err: any) {
       console.error('Failed to load contents:', err);
-      setError('파일 목록을 불러오는데 실패했습니다.');
+      showDialog({
+        title: '파일 목록 오류',
+        message: '파일 목록을 불러오는데 실패했습니다. 다시 로그인해주세요.',
+        confirmText: '로그인하기',
+        onConfirm: () => {
+          router.replace('/(auth)/login');
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +69,11 @@ export default function Screen() {
     if (!token || !currentRepo || !user) return;
 
     if (!file.name.endsWith('.md')) {
-      setError('마크다운(.md) 파일만 볼 수 있습니다.');
+      showDialog({
+        title: '지원하지 않는 파일',
+        message: '마크다운(.md) 파일만 볼 수 있습니다.',
+        confirmText: '확인',
+      });
       return;
     }
 
@@ -82,7 +93,14 @@ export default function Screen() {
       router.push('/(main)/editor');
     } catch (err) {
       console.error('Failed to load file:', err);
-      setError('파일을 불러오는데 실패했습니다.');
+      showDialog({
+        title: '파일 로드 오류',
+        message: '파일을 불러오는데 실패했습니다. 다시 로그인해주세요.',
+        confirmText: '로그인하기',
+        onConfirm: () => {
+          router.replace('/(auth)/login');
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -142,30 +160,18 @@ export default function Screen() {
 
   if (!currentRepo) {
     return (
-      <Box className="flex-1 items-center justify-center bg-background-0">
-        <Text className="text-typography-500">레포지토리를 선택해주세요.</Text>
+      <Box className="flex-1 items-center justify-center bg-background-950">
+        <Spinner size="large" />
       </Box>
     );
   }
 
   return (
     <Box className="flex-1 bg-background-0">
-      {/* Error */}
-      {error && (
-        <Box className="mx-4 mt-3 rounded-lg bg-error-50 p-3">
-          <Text size="sm" className="text-center text-error-600">{error}</Text>
-        </Box>
-      )}
-
       {/* Content */}
-      {isLoading ? (
+      {contents.length === 0 ? (
         <Box className="flex-1 items-center justify-center">
-          <Spinner size="large" />
-          <Text size="sm" className="mt-3 text-typography-500">로딩 중...</Text>
-        </Box>
-      ) : contents.length === 0 ? (
-        <Box className="flex-1 items-center justify-center">
-          <Text className="text-typography-400">빈 폴더입니다.</Text>
+          <Text className="text-typography-400">빈 Repository 입니다.</Text>
         </Box>
       ) : (
         <FlatList
